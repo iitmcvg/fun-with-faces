@@ -1,3 +1,1 @@
-g++ -c -g -I./include -I./src/dlib/all/source.cpp -ljpeg -mavx -lm -lpthread -lX11 -DDLIB_HAVE_BLAS -DNDEBUG  -DDLIB_JPEG_SUPPORT -DDLIB_HAVE_AVX  -O3 `pkg-config --cflags opencv` -o obj/main.o src/main.cpp
-cc1plus: warning: ./src/dlib/all/source.cpp: not a directory
-g++ -o bin/out obj/dlib.o obj/main.o -ljpeg -mavx -lm -lpthread -lX11 `pkg-config --libs opencv` -DDLIB_HAVE_BLAS -DNDEBUG  -DDLIB_JPEG_SUPPORT -DDLIB_HAVE_AVX  -O3
+make: Nothing to be done for 'all'.
