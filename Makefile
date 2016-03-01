@@ -18,14 +18,14 @@ LDFLAGS = -ljpeg -mavx -lm -lpthread -lX11 `pkg-config --libs opencv` -DDLIB_HAV
 # $^ stores the dependency
 all: bin/out
 
-bin/out: obj/dlib.o obj/main.o
+bin/out: obj/dlib.o obj/main2.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 obj/dlib.o: src/dlib/all/source.cpp
 	mkdir -p obj bin
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-obj/main.o: src/main.cpp
+obj/main2.o: src/main2.cpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 # .PHONY tells make that 'all' or 'clean' aren't _actually_ files, and always

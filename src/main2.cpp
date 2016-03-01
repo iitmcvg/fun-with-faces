@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdlib.h>
 #include <string>
 #include <sstream>
@@ -20,29 +19,18 @@ void preprocessROI(cv::Mat& roi_eye) {
     equalizeHist( roi_eye, roi_eye );
 }
 
-
-
-/*std::string IntToString ( int number )
-{
-  std::ostringstream oss;
-  // Works just like cout
-  oss<< number;
-  // Return the underlying string
-  return oss.str();
-}*/
-
-
 void mask(cv::Mat obj_clr,std::vector<cv::Point> dest, cv::Mat frame_clr)
 {
   cout<<"welcome to mask function :P \n";
-
 cv::Mat obj;
-
 cv::cvtColor(obj_clr,obj,CV_BGR2GRAY);
-
 cv::Mat sobj, sobj_clr, mask, invert, bg,fg;
-
+//std::vector<cv::Point> vertices;
 cv::Rect rect=cv::boundingRect(dest);
+      //cv::RotatedRect recttemp= cv::minAreaRect(dest);
+    //cv::Rect rect = recttemp.boundingRect();
+//recttemp.points(vertices);
+//cv::Rect rect=boundingRect(vertices);
 
  int rx,ry,rh,rw;
  rx=rect.x;
@@ -51,27 +39,50 @@ cv::Rect rect=cv::boundingRect(dest);
  rw=rect.width;
 
 //cv::rectangle(frame_clr,cv::Point(rx-rw/2,ry-rh/2),cv::Point(rx+rw/2,ry+rh/2),cv::Scalar(0, 0, 255));
-//cout<<"line1 ";
 
  cv::resize(obj,sobj,cv::Size(rw,rh));
- //cout<<"line 1.1";
  cv::resize(obj_clr,sobj_clr,cv::Size(rw,rh));
-//cout<<"line2  ";
  cv::threshold(sobj,mask,0,255,cv::THRESH_BINARY + cv::THRESH_OTSU);
  cv::bitwise_not(mask,invert);
- //cout<<"line3  ";
- cv::RotatedRect roi=rect;
+ cv::Rect roi=rect;
  //cv::Rect roi = cv::Rect(rx-rw/2, ry-rh/2, rw, rh);
  cv::Mat image_roi = frame_clr(roi);
- //cout<<"line4  ";
-
  cv::bitwise_and(image_roi, image_roi,bg,mask);  //checkout :P
- //cout<<"line5";
  cv::bitwise_and(sobj_clr, sobj_clr, fg,invert);
- //cout<<"line6";
  cv::add(fg, bg, image_roi);
  cout<<"reached end of mask :D \n" ;
 }
+
+
+
+void mask2(cv::Mat obj_clr,cv::Rect rect, cv::Mat frame_clr)
+{
+  cout<<"welcome to mask function :P \n";
+cv::Mat obj;
+cv::cvtColor(obj_clr,obj,CV_BGR2GRAY);
+cv::Mat sobj, sobj_clr, mask, invert, bg,fg;
+//std::vector<cv::Point> vertices;
+
+ int rx,ry,rh,rw;
+ rx=rect.x;
+ ry=rect.y;
+ rh=rect.height;
+ rw=rect.width;
+
+ cv::resize(obj,sobj,cv::Size(rw,rh));
+ cv::resize(obj_clr,sobj_clr,cv::Size(rw,rh));
+ cv::threshold(sobj,mask,0,255,cv::THRESH_BINARY + cv::THRESH_OTSU);
+ cv::bitwise_not(mask,invert);
+ cv::Rect roi=rect;
+ //cv::Rect roi = cv::Rect(rx-rw/2, ry-rh/2, rw, rh);
+ cv::Mat image_roi = frame_clr(roi);
+ cv::bitwise_and(image_roi, image_roi,bg,mask);  //checkout :P
+ cv::bitwise_and(sobj_clr, sobj_clr, fg,invert);
+ cv::add(fg, bg, image_roi);
+ cout<<"reached end of mask :D \n" ;
+}
+
+
 
 
 int main(int argc, char** argv) {
@@ -89,6 +100,7 @@ int main(int argc, char** argv) {
 
             cv::flip(frame_clr, frame_clr, 1);
             cv::cvtColor(frame_clr, frame, CV_BGR2GRAY);
+            cv::equalizeHist( frame, frame );
             cv_image<unsigned char> cimg_gray(frame);
 //detect faces
             std::vector<rectangle> faces = detector(cimg_gray);
@@ -104,19 +116,19 @@ int main(int argc, char** argv) {
                std::vector<cv::Point> dest2;
                for(int k=36;k<=41;k++) //eye
                {
-                 dest2.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()));
+                 dest2.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()+20));
 
                }
 
                for(int k=42;k<=47;k++) //eye
                {
-                 dest2.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()));
+                 dest2.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()+20));
 
                }
 
                 for(int k=17;k<=26;k++)    //eyebrow
                 {
-                dest2.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()+10));
+                dest2.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()+20));
 
                 }
 
@@ -137,19 +149,43 @@ int main(int argc, char** argv) {
 
                 }
 
-                
-                cv::Mat obj_clr1 = cv::imread("./res/images/moustache.jpg");
 
+                cv::Mat obj_clr1 = cv::imread("./res/images/moustache.jpg");
 
             mask(obj_clr1,dest1,frame_clr);
 
-               std::vector<cv::Point> dest3;
+              /* std::vector<cv::Point> dest3;
               for(int k=29;k<=35;k++)    //nosetip
                {
                  dest3.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()));
                }
                cv::Mat obj_clr3=cv::imread("./res/images/clown_nose.jpg");
+
                mask(obj_clr3,dest3,frame_clr);
+               */
+
+               //hat
+                cv::Mat obj_clr4=cv::imread("./res/images/hat.png");
+                std::vector<cv::Point> facedest;
+
+                for(int k=0;k<=26;k++) //face
+                {
+                  facedest.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()));
+
+                }
+                cv::Rect face=cv::boundingRect(facedest);
+
+                int fh,fw,fx,fy;
+                fh=face.height;
+                fw=face.width;
+                fx=face.x;
+                fy=face.y;
+                fh=fh* 0.75;
+
+                cv::Rect hatrect =cv::Rect(fx,fy-fh-30,fw,fh);    //check it out
+                mask2(obj_clr4,hatrect,frame_clr);
+
+
 
 
               // cv::circle(frame_clr,cv::Point(shape.part(30).x(), shape.part(30).y()),20,cv::Scalar(0, 0, 255),-1);
