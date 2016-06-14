@@ -183,7 +183,7 @@ int main(int argc, char** argv) {
                 fh=fh* 0.75;
 
                 cv::Rect hatrect =cv::Rect(fx,fy-fh-30,fw,fh);    //check it out
-                mask2(obj_clr4,hatrect,frame_clr);
+                //mask2(obj_clr4,hatrect,frame_clr);
 
 
 

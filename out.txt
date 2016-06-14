@@ -1,1 +1,53 @@
-make: Nothing to be done for 'all'.
+g++ -c -g -I./include -I./src/dlib/all/source.cpp -ljpeg -mavx -lm -lpthread -lX11 -DDLIB_HAVE_BLAS -DNDEBUG  -DDLIB_JPEG_SUPPORT -DDLIB_HAVE_AVX  -O3 `pkg-config --cflags opencv` -o obj/main.o src/main.cpp
+cc1plus: warning: ./src/dlib/all/source.cpp: not a directory
+src/main.cpp: In function ‘void mask(cv::Mat, int, int, int, int, float, cv::Mat)’:
+src/main.cpp:77:10: error: ‘class cv::Mat’ has no member named ‘points’
+ sobj_clr.points(obj_vertex);
+          ^
+src/main.cpp:78:52: error: no matching function for call to ‘getAffineTransform(std::vector<cv::Point_<int> >&, cv::Point2f [4])’
+ warpmat= cv::getAffineTransform(obj_vertex,vertices);
+                                                    ^
+src/main.cpp:78:52: note: candidates are:
+In file included from /usr/local/include/opencv2/opencv.hpp:50:0,
+                 from src/main.cpp:6:
+/usr/local/include/opencv2/imgproc/imgproc.hpp:605:16: note: cv::Mat cv::getAffineTransform(const Point2f*, const Point2f*)
+ CV_EXPORTS Mat getAffineTransform( const Point2f src[], const Point2f dst[] );
+                ^
+/usr/local/include/opencv2/imgproc/imgproc.hpp:605:16: note:   no known conversion for argument 1 from ‘std::vector<cv::Point_<int> >’ to ‘const Point2f* {aka const cv::Point_<float>*}’
+/usr/local/include/opencv2/imgproc/imgproc.hpp:610:18: note: cv::Mat cv::getAffineTransform(cv::InputArray, cv::InputArray)
+ CV_EXPORTS_W Mat getAffineTransform( InputArray src, InputArray dst );
+                  ^
+/usr/local/include/opencv2/imgproc/imgproc.hpp:610:18: note:   no known conversion for argument 2 from ‘cv::Point2f [4] {aka cv::Point_<float> [4]}’ to ‘cv::InputArray {aka const cv::_InputArray&}’
+src/main.cpp:88:78: error: too few arguments to function ‘cv::Mat cv::getRotationMatrix2D(cv::Point2f, double, double)’
+  rotmat=cv::getRotationMatrix2D(cv::Point(roinew.cols/2,roinew.rows/2), angle);
+                                                                              ^
+In file included from /usr/local/include/opencv2/opencv.hpp:50:0,
+                 from src/main.cpp:6:
+/usr/local/include/opencv2/imgproc/imgproc.hpp:601:18: note: declared here
+ CV_EXPORTS_W Mat getRotationMatrix2D( Point2f center, double angle, double scale );
+                  ^
+src/main.cpp:94:36: error: no match for call to ‘(cv::Mat) (cv::Mat&)’
+ cv::Mat image_roi= frame_clr(roinew);
+                                    ^
+In file included from /usr/local/include/opencv2/highgui/highgui.hpp:46:0,
+                 from src/main.cpp:5:
+/usr/local/include/opencv2/core/core.hpp:1688:18: note: candidates are:
+ class CV_EXPORTS Mat
+                  ^
+In file included from /usr/local/include/opencv2/core/core.hpp:4856:0,
+                 from /usr/local/include/opencv2/highgui/highgui.hpp:46,
+                 from src/main.cpp:5:
+/usr/local/include/opencv2/core/mat.hpp:373:12: note: cv::Mat cv::Mat::operator()(cv::Range, cv::Range) const
+ inline Mat Mat::operator()( Range _rowRange, Range _colRange ) const
+            ^
+/usr/local/include/opencv2/core/mat.hpp:373:12: note:   candidate expects 2 arguments, 1 provided
+/usr/local/include/opencv2/core/mat.hpp:378:12: note: cv::Mat cv::Mat::operator()(const Rect&) const
+ inline Mat Mat::operator()( const Rect& roi ) const
+            ^
+/usr/local/include/opencv2/core/mat.hpp:378:12: note:   no known conversion for argument 1 from ‘cv::Mat’ to ‘const Rect& {aka const cv::Rect_<int>&}’
+/usr/local/include/opencv2/core/mat.hpp:381:12: note: cv::Mat cv::Mat::operator()(const cv::Range*) const
+ inline Mat Mat::operator()(const Range* ranges) const
+            ^
+/usr/local/include/opencv2/core/mat.hpp:381:12: note:   no known conversion for argument 1 from ‘cv::Mat’ to ‘const cv::Range*’
+Makefile:29: recipe for target 'obj/main.o' failed
+make: *** [obj/main.o] Error 1

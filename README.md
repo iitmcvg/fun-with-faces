@@ -12,3 +12,9 @@ left eye - 42 to 47
 lowerlip lower part - 55 to 59
 upper lower part - 60 to 64
 lowerlip upper part - 65 to 67
+
+anticlockwise starting with my left corner- storage of vertices
+x- left to right increases
+y - top to bottom increases
+0 3
+1 2
