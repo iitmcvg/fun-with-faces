@@ -64,8 +64,10 @@ cv::threshold(temp_gray,mask,0,255,cv::THRESH_BINARY + cv::THRESH_OTSU);
 
 cv::bitwise_not(mask,invert);
 
+imshow("mask",mask);
+imshow("invert",invert);
 cv::bitwise_and(frame_clr, frame_clr,bg,invert);  //checkout :P
-cv::bitwise_and(temp, temp, fg,mask);
+cv::bitwise_and(~temp, ~temp, fg,mask);
 
 cv::add(fg, bg, frame_clr);
  // DONE
@@ -107,8 +109,15 @@ cv::threshold(temp_gray,mask,0,255,cv::THRESH_BINARY + cv::THRESH_OTSU);
 
 cv::bitwise_not(mask,invert);
 
+
+// imshow("mask",mask);
+// imshow("invert",invert);
+// imshow("temp_gray",temp_gray);
+// imshow("temp",temp);
+cv::waitKey(1);
+
 cv::bitwise_and(frame_clr, frame_clr,bg,invert);  //checkout :P
-cv::bitwise_and(temp, temp, fg,mask);
+cv::bitwise_and(~temp, ~temp, fg, mask);
 
 cv::add(fg, bg, frame_clr);
 //cv::equalizeHist( frame_clr, frame_clr);
@@ -223,8 +232,8 @@ int main(int argc, char** argv) {
                               fx=fx+(fw/2);
                                fy=fy-fh-25;
 
-                               //cv::Rect hatrect =cv::Rect(fx,fy-fh-30,fw,fh);    //check it out
-                  //             mask2(obj_clr4,fx,fy,fw,fh,angle,frame_clr,bg,fg);
+                               cv::Rect hatrect =cv::Rect(fx,fy-fh-30,fw,fh);    //check it out
+                               mask2(obj_clr4,fx,fy,fw,fh,angle,frame_clr,bg,fg);
 
 // Tasks left!! Find out why cap is upside down?
 // why is the object colour inverted? go deep into the masking functions
@@ -236,7 +245,7 @@ int main(int argc, char** argv) {
           //     dest2.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()+10));
           //
           //     }
-        /*  int nx=0, ny=0, nw, nh;
+      /*    int nx=0, ny=0, nw, nh;
                std::vector<cv::Point> dest3;
               for(int k=28;k<=35;k++)    //nosetip
                {
@@ -247,9 +256,9 @@ int main(int argc, char** argv) {
                nx=nx/8;
                ny=ny/8;
                nw = (shape.part(34).x()- shape.part(32).x())*1.2;
-               nh = shape.part(28).y()- shape.part(33).y();
+               nh = (shape.part(28).y()- shape.part(33).y())*1.2;
                cv::Mat obj_clr3=cv::imread("./res/images/clown_nose.jpg");
-               mask(obj_clr3,nx,ny,nw,nh,angle,frame_clr,bg,fg);*/
+               mask(obj_clr3,nx,ny,nw,nh,angle,frame_clr,bg,fg); */
 
               // cv::circle(frame_clr,cv::Point(shape.part(30).x(), shape.part(30).y()),20,cv::Scalar(0, 0, 255),-1);
                              std::vector<full_object_detection> shapes;
