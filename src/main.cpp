@@ -64,8 +64,8 @@ cv::threshold(temp_gray,mask,0,255,cv::THRESH_BINARY + cv::THRESH_OTSU);
 
 cv::bitwise_not(mask,invert);
 
-imshow("mask",mask);
-imshow("invert",invert);
+//imshow("mask",mask);
+//imshow("invert",invert);
 cv::bitwise_and(frame_clr, frame_clr,bg,invert);  //checkout :P
 cv::bitwise_and(~temp, ~temp, fg,mask);
 
@@ -186,8 +186,8 @@ int main(int argc, char** argv) {
                 ew=(shape.part(45).x()+shape.part(16).x()-shape.part(36).x()-shape.part(0).x())/2;
                 eh=(shape.part(19).y() + shape.part(24).y() - shape.part(46).y()-shape.part(41).y())/2;
 
-                cv::Mat obj_clr2 =cv::imread("./res/images/specs2.png");
-                mask(obj_clr2,cx,cy,ew,eh,angle,frame_clr,bg,fg);
+                cv::Mat obj_clr2 =cv::imread("./res/images/specs3.png");
+              mask(obj_clr2,cx,cy,ew,eh,angle,frame_clr,bg,fg);
 
                 int mx=0,my=0,mh,mw;
                 std::vector<cv::Point> dest1;
@@ -204,36 +204,65 @@ int main(int argc, char** argv) {
                   my=my+ shape.part(k).y();
                 }
                   mx=mx/12;  my=my/12;
-                cv::Mat obj_clr1 = cv::imread("./res/images/moustache.jpg");
+                cv::Mat obj_clr1 = cv::imread("./res/images/3d.png");
 
                 mh=(shape.part(30).y()+shape.part(33).y()-shape.part(51).y()- shape.part(62).y())/2;
                 mw=shape.part(54).x() - shape.part(48).x();
 
                mask(obj_clr1,mx,my,mw,mh,angle,frame_clr,bg,fg);
 
-               cv::Mat obj_clr4=cv::imread("./res/images/hat.png");
+               cv::Mat obj_clr4=cv::imread("./res/images/super saiyan.jpg");
                                std::vector<cv::Point> dest4;
 
+                cv::RotatedRect Ellipse;
+                std::vector<cv::Point> destface;
+                    for(int p = 0;p <=67 ; p++)
+                    {
+                      destface.push_back(cv::Point(shape.part(p).x(), shape.part(p).y()));
+                    }
+                Ellipse = cv::fitEllipse( cv::Mat(destface));
+
+                int xc = Ellipse.center.x;
+                int yc = Ellipse.center.y;
+                float b = Ellipse.size.width/ 2;
+                float a = Ellipse.size.height/ 2;
+                float theta = Ellipse.angle;
+
+              //  cout<<" angle" <<theta;
+                theta = theta/180*3.14;
+                float fh,fw,fx,fy;
+            //    fy = yc - sin(theta) * 2* a;
+              //  fx = xc - cos(theta) * 2* b;
+            //  fy =( yc + 2*a)*sin(theta);
+            //  fx = (xc + 2*b)*cos(theta);
+            //    fw = 2*b;
+            //    fh = 2*a;
+            //     cv::line(frame_clr, s, Point pt2, const Scalar& color, int thickness=1, int lineType=8, int shift=0)
+            //Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
+          //     cv::ellipse(frame_clr, Ellipse, cv::Scalar(0,255,0), 2, 8 );
                                for(int k=0;k<=26;k++) //face
                                {
                                  dest4.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()));
 
                                }
                                cv::Rect face=cv::boundingRect(dest4);
+//fy = face.y - sin(theta)*b;
+//fx = face.x + cos(theta)*a;
+cv::line(frame_clr, cv::Point(xc,yc), cv::Point(fx,fy),  cv::Scalar(255,0,0),1, 8);
+cv::line(frame_clr, cv::Point(shape.part(8).x(),shape.part(8).y()), cv::Point(shape.part(27).x(),shape.part(27).y()), cv::Scalar(0,255,0),1,8);
 
-                               int fh,fw,fx,fy;
                                fh=face.height;
                                fw=face.width;
                                fx=face.x;
                                fy=face.y;
                                fh=fh* 0.75;
-                               //fx=fx+(fw/2)*sin(-angle*3.14/180);
-                               //fy=fy-fh*sin(-angle*3.14/180)-15;
+                               fx=fx+(fw/2)*sin(-angle*3.14/180);
+                               fy=fy-fh*sin(-angle*3.14/180)-15;
                               fx=fx+(fw/2);
-                               fy=fy-fh-25;
-
-                               cv::Rect hatrect =cv::Rect(fx,fy-fh-30,fw,fh);    //check it out
+                              fy=fy-fh+40;
+                               cv::Rect hatrect =cv::Rect(fx,fy-fh+30,fw,fh);    //check it out
                                mask2(obj_clr4,fx,fy,fw,fh,angle,frame_clr,bg,fg);
+
 
 // Tasks left!! Find out why cap is upside down?
 // why is the object colour inverted? go deep into the masking functions
@@ -245,7 +274,7 @@ int main(int argc, char** argv) {
           //     dest2.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()+10));
           //
           //     }
-      /*    int nx=0, ny=0, nw, nh;
+          int nx=0, ny=0, nw, nh;
                std::vector<cv::Point> dest3;
               for(int k=28;k<=35;k++)    //nosetip
                {
@@ -255,14 +284,50 @@ int main(int argc, char** argv) {
                }
                nx=nx/8;
                ny=ny/8;
+
                nw = (shape.part(34).x()- shape.part(32).x())*1.2;
-               nh = (shape.part(28).y()- shape.part(33).y())*1.2;
+               nh = (shape.part(28).y()- shape.part(33).y())*1.5;
                cv::Mat obj_clr3=cv::imread("./res/images/clown_nose.jpg");
-               mask(obj_clr3,nx,ny,nw,nh,angle,frame_clr,bg,fg); */
+            //*   mask(obj_clr3,nx,ny,nw,nh,angle,frame_clr,bg,fg);
 
               // cv::circle(frame_clr,cv::Point(shape.part(30).x(), shape.part(30).y()),20,cv::Scalar(0, 0, 255),-1);
                              std::vector<full_object_detection> shapes;
                               shapes.push_back(shape);
+
+                              cv::Mat framepic =cv::imread("./res/images/frame4.jpg");
+          mask(framepic,frame_clr.cols/2, frame_clr.rows/2, frame_clr.cols,frame_clr.rows,0,frame_clr, bg, fg );
+
+//gen
+//for (int j = 0;j<=67;j++)
+//{
+  //    cv::circle(frame_clr, cv::Point(shape.part(j).x(),shape.part(j).y()), 3,cv::Scalar(100,100,100),-1,8);
+//}
+
+std::vector<cv::Point> destbeard;
+for(int k=3;k<=13;k++) //moustache
+{
+  destbeard.push_back(cv::Point(shape.part(k).x(),shape.part(k).y()));
+}
+cv::Mat obj_clr5=cv::imread("./res/images/b1.jpg");
+ cv::Rect bd=cv::boundingRect(destbeard);
+ float bx, by, bh,bw;
+ bh=bd.height;
+ bw=bd.width;
+ bx=bd.x;
+by=bd.y;
+
+
+//mask2(obj_clr5,bx,by,bw,bh,angle,frame_clr,bg,fg);
+
+
+
+
+
+
+
+
+
+
 
              }
             win.clear_overlay();
